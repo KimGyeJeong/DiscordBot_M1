@@ -1,17 +1,38 @@
-const Discord = require('discord.js');	// discord.js 라이브러리 호출
-const client = new Discord.Client({ intents: ["GUILDS", "GUILD_MESSAGES"] })	// Client 객체 생성
+const fs = require('node:fs');
+const path = require('node:path');
+// Require the necessary discord.js classes
+const { Client, Events, GatewayIntentBits,Collection } = require('discord.js');
 
-const dotenv = require('dotenv').config();	// .env 파일 호출
-const BOT_TOKEN = dotenv.parsed.BOT_TOKEN;	// .env 파일에서 BOT_TOKEN 변수 호출
+require('dotenv').config();	// .env 파일을 불러옴
+const BOT_TOKEN = process.env.BOT_TOKEN;	// .env 파일에서 BOT_TOKEN 변수 호출
+console.log(BOT_TOKEN)
 
-client.on('ready', () => {
-    console.log(`Logged in as ${client.user.tag}!`);
-});
+// Create a new client instance
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-client.on('message', msg => {
-    if (msg.content === 'ping') {
-        msg.reply('Pong!');
+client.commands = new Collection();
+
+const commandsPath = path.join(__dirname, 'commands');
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+    const filePath = path.join(commandsPath, file);
+    const command = require(filePath);
+    // Set a new item in the Collection with the key as the command name and the value as the exported module
+    if ('data' in command && 'execute' in command) {
+        client.commands.set(command.data.name, command);
+    } else {
+        console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
     }
+}
+
+// When the client is ready, run this code (only once)
+// We use 'c' for the event parameter to keep it separate from the already defined 'client'
+client.once(Events.ClientReady, c => {
+    console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 
+
+
+// Log in to Discord with your client's token
 client.login(BOT_TOKEN);
