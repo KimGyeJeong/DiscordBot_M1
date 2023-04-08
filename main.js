@@ -5,10 +5,10 @@ const { Client, Events, GatewayIntentBits,Collection } = require('discord.js');
 
 require('dotenv').config();	// .env 파일을 불러옴
 const BOT_TOKEN = process.env.BOT_TOKEN;	// .env 파일에서 BOT_TOKEN 변수 호출
-console.log(BOT_TOKEN)
+console.log(BOT_TOKEN);
 
 const CLIENT_ID = process.env.CLIENT_ID;
-console.log(CLIENT_ID)
+console.log(CLIENT_ID);
 
 
 
@@ -44,6 +44,9 @@ for (const file of commandFiles) {
 client.once(Events.ClientReady, c => {
     console.log(`Ready! Logged in as ${c.user.tag}`);
 });
+
+
+
 
 client.on(Events.InteractionCreate, async interaction => {
     if (!interaction.isChatInputCommand()) return;
