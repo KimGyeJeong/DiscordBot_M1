@@ -24,6 +24,9 @@ client.commands = new Collection();
 const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);
 
+// console.log(`foldersPath: ${foldersPath}`);
+// console.log(`commandFolders: ${commandFolders}`);
+
 // const eventsPath = path.join(__dirname, 'events');
 // const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
 
@@ -35,8 +38,8 @@ for (const folder of commandFolders) {
         const filePath = path.join(commandsPath, file);
         const command = require(filePath);
 
-        console.log(`main command ${command}`);
-        console.log(`filePath: ${filePath}`);
+        // console.log(`main command ${command}`);
+        // console.log(`filePath: ${filePath}`);
 
         // Set a new item in the Collection with the key as the command name and the value as the exported module
         if ('data' in command && 'execute' in command) {
@@ -64,7 +67,7 @@ for (const folder of commandFolders) {
 // We use 'c' for the event parameter to keep it separate from the already defined 'client'
 client.once(Events.ClientReady, c => {
     console.log(`Ready! Logged in as ${c.user.tag}`);
-    console.log(c.user);
+    //console.log(c.user);
     // console.log(c);
 });
 
@@ -73,13 +76,6 @@ client.once(Events.ClientReady, c => {
 
 client.on(Events.InteractionCreate, async interaction => {
     console.log('working...');
-
-    if (!interaction.isChatInputCommand()) return;
-
-    if (interaction.commandName === 'ping') {
-        console.log('ping command');
-        await interaction.reply({ content: 'Secret Pong!', ephemeral: true });
-    }
 
     const command = client.commands.get(interaction.commandName);
     if (!command) return;
