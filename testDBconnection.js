@@ -23,5 +23,21 @@ connection.query('SELECT * from nodejs.discordbot',(error, rows, fields)=>{
     }
 });
 
+connection.query('select * from nodejs.break where brk_seq = 1 order by brk_seq desc',(error, rows, fields)=>{
+    if(error){
+        console.log(error);
+    } else {
+        console.log(rows);  // 한줄
+        rows.forEach(e => console.log(e));  // 한줄씩
+
+        console.log(rows[0].BRK_SEQ);
+        console.log(rows[0].BRK_FRDATE);
+        let REAL_DATE = rows[0].BRK_TODATE - rows[0].BRK_FRDATE;
+        console.log(typeof rows[0].BRK_TODATE);
+        console.log(`REAL DATE = ${REAL_DATE}`);
+        // console.log(fields);
+    }
+})
+
 
 connection.end();

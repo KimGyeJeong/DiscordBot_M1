@@ -77,6 +77,12 @@ client.once(Events.ClientReady, c => {
 client.on(Events.InteractionCreate, async interaction => {
     console.log('working...');
 
+    // if(interaction.commandName === 'userInfo'){
+    //     console.log('userInfo command active');
+    //     const modal = require('./commands/modal/inputUserInfo.js');
+    //
+    // }
+
     const command = client.commands.get(interaction.commandName);
     if (!command) return;
 
