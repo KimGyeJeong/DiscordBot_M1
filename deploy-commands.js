@@ -17,7 +17,8 @@ const commands = [];
 // Grab all the command files from the commands directory you created earlier
 // const commandsPath = path.join(__dirname, 'commands');
 
-const commandsPath = path.join(__dirname, 'commands/fun');
+// const commandsPath = path.join(__dirname, 'commands/fun');   // fun 폴더 안에 있는 파일들만 불러옴
+const commandsPath = path.join(__dirname, 'commands/utility');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
 console.log("commandsPath: " + commandsPath);
@@ -25,6 +26,7 @@ console.log("commandFiles: " + commandFiles);
 
 // Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
 for (const file of commandFiles) {
+    // const command = require(`./commands/fun/${file}`);   // fun 폴더 안에 있는 파일들만 불러옴
     const command = require(`./commands/fun/${file}`);
     console.log(`deploy-commands working... ${command}`);
     commands.push(command.data.toJSON());
