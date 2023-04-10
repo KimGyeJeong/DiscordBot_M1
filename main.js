@@ -1,7 +1,8 @@
 const fs = require('node:fs');
 const path = require('node:path');
 // Require the necessary discord.js classes
-const { Client, Events, GatewayIntentBits,Collection } = require('discord.js');
+const {Client, Events, GatewayIntentBits, Collection} = require('discord.js');
+
 
 require('dotenv').config();	// .env 파일을 불러옴
 
@@ -15,9 +16,8 @@ const GUILD_ID = process.env.GUILD_ID;
 console.log(`GUILD_ID: ${GUILD_ID}`);
 
 
-
 // Create a new client instance
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({intents: [GatewayIntentBits.Guilds]});
 
 client.commands = new Collection();
 
@@ -50,19 +50,6 @@ for (const folder of commandFolders) {
     }
 }
 
-
-// client.on("message", (message) => {
-//     if(message.content === "hello"){
-//         console.log("hello command active");
-//         message.reply("hello");
-//         message.channel.send("hello");
-//     }
-//     console.log(message.content);
-//     console.log(message.author);
-//
-//     console.log("TEST");
-// });
-
 // When the client is ready, run this code (only once)
 // We use 'c' for the event parameter to keep it separate from the already defined 'client'
 client.once(Events.ClientReady, c => {
@@ -72,36 +59,38 @@ client.once(Events.ClientReady, c => {
 });
 
 
-
-
 client.on(Events.InteractionCreate, async interaction => {
     console.log('working...');
-
-    // if(interaction.commandName === 'userInfo'){
-    //     console.log('userInfo command active');
-    //     const modal = require('./commands/modal/inputUserInfo.js');
-    //
-    // }
 
     const command = client.commands.get(interaction.commandName);
     if (!command) return;
 
     if (!interaction.isChatInputCommand()) return;
 
+    // if (!interaction.isModalSubmit()) return;
+    // 여기서 뻗어버림;
+
+    // if(interaction.isModalSubmit()){
+    //     console.log('modal submit');
+    //     console.log(`interaction.fields : ${interaction.fields}`);
+    // }
+    //얘는 작동도 안함
+
+    if (interaction.customId === 'InputUserInfo') {
+        await interaction.reply({ content: 'Your submission was received successfully!' });
+    }
 
     try {
         await command.execute(interaction);
     } catch (error) {
         console.error(error);
         if (interaction.replied || interaction.deferred) {
-            await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+            await interaction.followUp({content: 'There was an error while executing this command!', ephemeral: true});
         } else {
-            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+            await interaction.reply({content: 'There was an error while executing this command!', ephemeral: true});
         }
     }
 });
-
-
 
 
 // Log in to Discord with your client's token
